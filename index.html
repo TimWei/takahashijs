@@ -32,12 +32,12 @@
 	<script type="text/x-template" id="taka_hashi_page">
 		<!-- paginate -->
 		<div>
-			{{ actived }}
-			<span class='paginate prev' v-if='actived > 0' v-on:click='next'>	
+			<!-- {{ actived }} -->
+			<span class='paginate prev' v-if='actived > 0'  v-on:click='prev'>	
 				<a href='javascript: void(0);'>&#x25C0</a>
 			</span>
 		
-			<span class='paginate next' v-if='actived < (pages.length -1)'>
+			<span class='paginate next' v-if='actived < (pages.length -1)' v-on:click='next'>
 				<a href='javascript: void(0);'>&#x25B6</a>
 			</span>
 		</div>
@@ -83,20 +83,19 @@
 
 		var paginate_component = {
 			template: '#taka_hashi_page',
-			// props: ['actived','pages'],
 		  methods: {
 				next: function(){
-					console.log('q')
-					// if(self.actived < (self.pages.length - 1) ){
-					// 	self.actived ++;
-					// }
+					if(this.actived < (this.pages.length - 1) ){
+						this.actived ++;
+						console.log(this.actived)
+					}
 				}
-				// ,
-				// prev: function(){
-				// 	if(self.actived > 0 ){
-				// 		self.actived --;
-				// 	}
-				// },
+				,
+				prev: function(){
+					if(this.actived > 0 ){
+						this.actived --;
+					}
+				},
 
 		  },
 			data: function () {
@@ -147,27 +146,27 @@
 				// hasPrev: function(){
 				// 	return this.actived > 0 ? true : false
 				// },
-				keyCallback: function(e){
-					let triggerNext = ['Space','ArrowRight','ArrowDown'];
-					let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];
-					let press = e.code;
-					if(triggerNext.includes(press)){
-						this.next();
-					}else if(triggerPrev.includes(press)){
-						this.prev();
-					}else{
-						console.warn('unknown key input');
-					}
-				},
-				clickCallback: function(e){
-					let contentWidth = e.target.offsetWidth;
-					let fixedClickX = e.x - e.target.offsetLeft
-					if(fixedClickX > (contentWidth / 2) ) {
-						this.next();
-					}else{
-						this.prev();
-					}
-				},
+				// keyCallback: function(e){
+				// 	let triggerNext = ['Space','ArrowRight','ArrowDown'];
+				// 	let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];
+				// 	let press = e.code;
+				// 	if(triggerNext.includes(press)){
+				// 		this.next();
+				// 	}else if(triggerPrev.includes(press)){
+				// 		this.prev();
+				// 	}else{
+				// 		console.warn('unknown key input');
+				// 	}
+				// },
+				// clickCallback: function(e){
+				// 	let contentWidth = e.target.offsetWidth;
+				// 	let fixedClickX = e.x - e.target.offsetLeft
+				// 	if(fixedClickX > (contentWidth / 2) ) {
+				// 		this.next();
+				// 	}else{
+				// 		this.prev();
+				// 	}
+				// },
 				// TODO
 				// fetchContent: function(source){
 				// 	type = typeof(source)
