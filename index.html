@@ -7,32 +7,15 @@
 		<div style ='width: 100%; height: 400px;'>
 		<!-- app -->
 		<div class='taka_hashi'>
-			<!-- paginate -->
-		<taka-page>
-		</taka-page>
-			<!-- content -->
-<!-- 			<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
-					<p v-if="pages[actived]['header']!=''" class='header'>
-						{{ pages[actived]['header'] }}
-					</p>
-				  <p v-for="line in pages[actived]['content']">
-				    {{ line }}
-				  </p>
-					<p v-if="pages[actived]['footer'] != ''" class='footer'>
-						{{ pages[actived]['footer'] }}
-					</p>
-			</div>	
-			<span class='fs' @click='fullscreen()'>
-				<a href='javascript: void(0);'>全屏&#x2B1B</a>
-			</span> -->
+			<taka-arrow></taka-arrow>
+			<taka-content></taka-content>
+			<taka-fs></taka-fs>
 		</div>
 	</div>
 	</body>	
-
-	<script type="text/x-template" id="taka_hashi_page">
-		<!-- paginate -->
+	<!-- components -->
+	<script type="text/x-template" id="taka_hashi_arrow">
 		<div>
-			<!-- {{ actived }} -->
 			<span class='paginate prev' v-if='actived > 0'  v-on:click='prev'>	
 				<a href='javascript: void(0);'>&#x25C0</a>
 			</span>
@@ -43,6 +26,26 @@
 		</div>
 	</script>
 
+	<script type="text/x-template" id="taka_hashi_fs">
+		<span class='fs' @click='fullscreen'>
+			<a href='javascript: void(0);'>全屏&#x2B1B</a>
+		</span>
+	</script>
+
+	<script type="text/x-template" id="taka_hashi_content">
+		<div class='content' @click='clickCallback'>
+			<p v-if="pages[actived]['header']!=''" class='header'>
+				{{ pages[actived]['header'] }}
+			</p>
+			 <p v-for="line in pages[actived]['content']">
+			    {{ line }}
+			 </p>
+			<p v-if="pages[actived]['footer'] != ''" class='footer'>
+				{{ pages[actived]['footer'] }}
+			</p>
+		</div>
+	</script>
+	<!-- main.js -->
 	<script>
 		var page_data = [
 					{content: ['TakaHashi JS'], header: '', footer: '高橋簡報術的庫'},
@@ -81,13 +84,64 @@
 			pages: page_data,
 		}
 
-		var paginate_component = {
-			template: '#taka_hashi_page',
-		  methods: {
+		var fs_component = {
+			template: '#taka_hashi_fs',
+		  	methods: {
+		  		fullscreen: function(){
+					ele = taka.$el;
+				    if (ele.requestFullscreen) {
+				        ele.requestFullscreen();
+				    }
+				    else if (ele.mozRequestFullScreen) {
+				        ele.mozRequestFullScreen();
+				    }
+				    else if (ele.webkitRequestFullscreen) {
+				        ele.webkitRequestFullscreen();
+				    }
+				    else if (ele.msRequestFullscreen) {
+				        ele.msRequestFullscreen();
+				    }
+		  		}
+		  	}
+
+		}
+
+		var content_component = {
+			template: '#taka_hashi_content',
+		  	methods: {
 				next: function(){
 					if(this.actived < (this.pages.length - 1) ){
 						this.actived ++;
-						console.log(this.actived)
+					}
+				}
+				,
+				prev: function(){
+					if(this.actived > 0 ){
+						this.actived --;
+					}
+				},
+				clickCallback: function(e){
+					let contentWidth = e.target.offsetWidth;
+					let fixedClickX = e.x - e.target.offsetLeft
+					if(fixedClickX > (contentWidth / 2) ) {
+						this.next();
+					}else{
+						this.prev();
+					}
+				},
+
+		  	},
+		 	data: function () {
+		    	return taka_data;
+		  	}
+		}
+
+		var arrow_component = {
+			template: '#taka_hashi_arrow',
+		  	methods: {
+				next: function(){
+					if(this.actived < (this.pages.length - 1) ){
+						this.actived ++;
 					}
 				}
 				,
@@ -97,76 +151,46 @@
 					}
 				},
 
-		  },
+		 	},
 			data: function () {
-		    return taka_data;
-		  }
+		    	return taka_data;
+		  	}
 		}
 
 		var taka = new Vue({
 			el: '.taka_hashi',
 			data: taka_data,
 			created: function () {
-        window.addEventListener('keyup', this.keyCallback);
+        		window.addEventListener('keyup', this.keyCallback);
 			},
 			components: {
-		    // <my-component> 将只在父模板可用
-		    'taka-page': paginate_component
+		    'taka-content': content_component,
+		    'taka-arrow': arrow_component,
+		    'taka-fs': fs_component
 		  },
 			methods: {
-				fullscreen: function(){
-					console.log('qq');
-					ele = this.$el;
-			    if (ele.requestFullscreen) {
-			        ele.requestFullscreen();
-			    }
-			    else if (ele.mozRequestFullScreen) {
-			        ele.mozRequestFullScreen();
-			    }
-			    else if (ele.webkitRequestFullscreen) {
-			        ele.webkitRequestFullscreen();
-			    }
-			    else if (ele.msRequestFullscreen) {
-			        ele.msRequestFullscreen();
-			    }
+				next: function(){
+					if(this.actived < (this.pages.length - 1) ){
+						this.actived ++;
+					}
 				},
-				// next: function(){
-				// 	if(this.actived < (this.pages.length - 1) ){
-				// 		this.actived ++;
-				// 	}
-				// },
-				// prev: function(){
-				// 	if(this.actived > 0 ){
-				// 			this.actived --;
-				// 	}
-				// },
-				// hasNext: function(){
-				// 	return this.actived < (this.pages.length - 1) ? true : false
-				// },
-				// hasPrev: function(){
-				// 	return this.actived > 0 ? true : false
-				// },
-				// keyCallback: function(e){
-				// 	let triggerNext = ['Space','ArrowRight','ArrowDown'];
-				// 	let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];
-				// 	let press = e.code;
-				// 	if(triggerNext.includes(press)){
-				// 		this.next();
-				// 	}else if(triggerPrev.includes(press)){
-				// 		this.prev();
-				// 	}else{
-				// 		console.warn('unknown key input');
-				// 	}
-				// },
-				// clickCallback: function(e){
-				// 	let contentWidth = e.target.offsetWidth;
-				// 	let fixedClickX = e.x - e.target.offsetLeft
-				// 	if(fixedClickX > (contentWidth / 2) ) {
-				// 		this.next();
-				// 	}else{
-				// 		this.prev();
-				// 	}
-				// },
+				prev: function(){
+					if(this.actived > 0 ){
+							this.actived --;
+					}
+				},
+				keyCallback: function(e){
+					let triggerNext = ['Space','ArrowRight','ArrowDown'];
+					let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];
+					let press = e.code;
+					if(triggerNext.includes(press)){
+						this.next();
+					}else if(triggerPrev.includes(press)){
+						this.prev();
+					}else{
+						console.warn('unknown key input');
+					}
+				},
 				// TODO
 				// fetchContent: function(source){
 				// 	type = typeof(source)
