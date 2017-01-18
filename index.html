@@ -8,14 +8,10 @@
 		<!-- app -->
 		<div class='taka_hashi'>
 			<!-- paginate -->
-			<span class='paginate prev' v-if='hasPrev()' @click='prev()'>
-				<a href='javascript: void(0);'>&#x25C0</a>
-			</span>
-			<span class='paginate next' v-if='hasNext()' @click='next()'>
-				<a href='javascript: void(0);'>&#x25B6</a>
-			</span>
+		<taka-page>
+		</taka-page>
 			<!-- content -->
-			<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
+<!-- 			<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
 					<p v-if="pages[actived]['header']!=''" class='header'>
 						{{ pages[actived]['header'] }}
 					</p>
@@ -28,34 +24,23 @@
 			</div>	
 			<span class='fs' @click='fullscreen()'>
 				<a href='javascript: void(0);'>全屏&#x2B1B</a>
-			</span>
+			</span> -->
 		</div>
 	</div>
 	</body>	
 
-	<script type="text/x-template" id="taka_hashi_template">
+	<script type="text/x-template" id="taka_hashi_page">
 		<!-- paginate -->
-		<span class='paginate prev' v-if='hasPrev()' @click='prev()'>
-			<a href='javascript: void(0);'>&#x25C0</a>
-		</span>
-		<span class='paginate next' v-if='hasNext()' @click='next()'>
-			<a href='javascript: void(0);'>&#x25B6</a>
-		</span>
-		<!-- content -->
-		<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
-				<p v-if="pages[actived]['header']!=''" class='header'>
-					{{ pages[actived]['header'] }}
-				</p>
-			  <p v-for="line in pages[actived]['content']">
-			    {{ line }}
-			  </p>
-				<p v-if="pages[actived]['footer'] != ''" class='footer'>
-					{{ pages[actived]['footer'] }}
-				</p>
-		</div>	
-		<span class='fs' @click='fullscreen()'>
-			<a href='javascript: void(0);'>全屏&#x2B1B</a>
-		</span>
+		<div>
+			{{ actived }}
+			<span class='paginate prev' v-if='actived > 0' v-on:click='next'>	
+				<a href='javascript: void(0);'>&#x25C0</a>
+			</span>
+		
+			<span class='paginate next' v-if='actived < (pages.length -1)'>
+				<a href='javascript: void(0);'>&#x25B6</a>
+			</span>
+		</div>
 	</script>
 
 	<script>
@@ -95,12 +80,40 @@
 			actived: 0,
 			pages: page_data,
 		}
+
+		var paginate_component = {
+			template: '#taka_hashi_page',
+			// props: ['actived','pages'],
+		  methods: {
+				next: function(){
+					console.log('q')
+					// if(self.actived < (self.pages.length - 1) ){
+					// 	self.actived ++;
+					// }
+				}
+				// ,
+				// prev: function(){
+				// 	if(self.actived > 0 ){
+				// 		self.actived --;
+				// 	}
+				// },
+
+		  },
+			data: function () {
+		    return taka_data;
+		  }
+		}
+
 		var taka = new Vue({
 			el: '.taka_hashi',
 			data: taka_data,
 			created: function () {
         window.addEventListener('keyup', this.keyCallback);
 			},
+			components: {
+		    // <my-component> 将只在父模板可用
+		    'taka-page': paginate_component
+		  },
 			methods: {
 				fullscreen: function(){
 					console.log('qq');
@@ -118,22 +131,22 @@
 			        ele.msRequestFullscreen();
 			    }
 				},
-				next: function(){
-					if(this.actived < (this.pages.length - 1) ){
-						this.actived ++;
-					}
-				},
-				prev: function(){
-					if(this.actived > 0 ){
-							this.actived --;
-					}
-				},
-				hasNext: function(){
-					return this.actived < (this.pages.length - 1) ? true : false
-				},
-				hasPrev: function(){
-					return this.actived > 0 ? true : false
-				},
+				// next: function(){
+				// 	if(this.actived < (this.pages.length - 1) ){
+				// 		this.actived ++;
+				// 	}
+				// },
+				// prev: function(){
+				// 	if(this.actived > 0 ){
+				// 			this.actived --;
+				// 	}
+				// },
+				// hasNext: function(){
+				// 	return this.actived < (this.pages.length - 1) ? true : false
+				// },
+				// hasPrev: function(){
+				// 	return this.actived > 0 ? true : false
+				// },
 				keyCallback: function(e){
 					let triggerNext = ['Space','ArrowRight','ArrowDown'];
 					let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];

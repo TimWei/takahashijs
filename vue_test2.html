@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<script src='https://unpkg.com/vue/dist/vue.js'></script>
+	</head>
+	<body>
+		<div id='data1'>
+			{{ value.data }}
+		</div>
+		<div id='data2' @click='value.data+=1'>
+			{{ value.data }}
+			
+		</div>
+	</body>	
+	
+	<script>
+		var test = {data: 1};
+
+		var list = new Vue({
+			el: '#data1',
+			data: {
+				value: test
+			},
+		});
+		var list = new Vue({
+			el: '#data2',
+			data: {
+				value: test
+			},
+		});
+	</script>
+</html>
