@@ -8,15 +8,15 @@
 		<!-- app -->
 		<div class='taka_hashi'>
 			<!-- paginate -->
-			<span class='paginate prev' v-if="hasPrev()" @click="prev()">
-				<a href="javascript: void(0);">&#x25C0</a>
+			<span class='paginate prev' v-if='hasPrev()' @click='prev()'>
+				<a href='javascript: void(0);'>&#x25C0</a>
 			</span>
-			<span class='paginate next' v-if="hasNext()" @click="next()">
-				<a href="javascript: void(0);">&#x25B6</a>
+			<span class='paginate next' v-if='hasNext()' @click='next()'>
+				<a href='javascript: void(0);'>&#x25B6</a>
 			</span>
 			<!-- content -->
-			<div class='content' @click="clickCallback" @keyup.space="next()" @keyup.left="prev()">
-					<p v-if="pages[actived]['header'] != ''" class='header'>
+			<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
+					<p v-if="pages[actived]['header']!=''" class='header'>
 						{{ pages[actived]['header'] }}
 					</p>
 				  <p v-for="line in pages[actived]['content']">
@@ -26,13 +26,38 @@
 						{{ pages[actived]['footer'] }}
 					</p>
 			</div>	
-			<span class='fs' @click="fullscreen()">
-				<a href="javascript: void(0);">全屏&#x2B1B</a>
+			<span class='fs' @click='fullscreen()'>
+				<a href='javascript: void(0);'>全屏&#x2B1B</a>
 			</span>
 		</div>
 	</div>
 	</body>	
-	
+
+	<script type="text/x-template" id="taka_hashi_template">
+		<!-- paginate -->
+		<span class='paginate prev' v-if='hasPrev()' @click='prev()'>
+			<a href='javascript: void(0);'>&#x25C0</a>
+		</span>
+		<span class='paginate next' v-if='hasNext()' @click='next()'>
+			<a href='javascript: void(0);'>&#x25B6</a>
+		</span>
+		<!-- content -->
+		<div class='content' @click='clickCallback' @keyup.space='next()' @keyup.left='prev()'>
+				<p v-if="pages[actived]['header']!=''" class='header'>
+					{{ pages[actived]['header'] }}
+				</p>
+			  <p v-for="line in pages[actived]['content']">
+			    {{ line }}
+			  </p>
+				<p v-if="pages[actived]['footer'] != ''" class='footer'>
+					{{ pages[actived]['footer'] }}
+				</p>
+		</div>	
+		<span class='fs' @click='fullscreen()'>
+			<a href='javascript: void(0);'>全屏&#x2B1B</a>
+		</span>
+	</script>
+
 	<script>
 		var page_data = [
 					{content: ['TakaHashi JS'], header: '', footer: '高橋簡報術的庫'},
@@ -66,12 +91,13 @@
 					{content: ['做人要友善'], header: '', footer: ''},
 					{content: ['謝謝觀看'], header: '', footer: ''},
 				];
+		var taka_data = {
+			actived: 0,
+			pages: page_data,
+		}
 		var taka = new Vue({
 			el: '.taka_hashi',
-			data: {
-				actived: 0,
-				pages: page_data,
-			},
+			data: taka_data,
 			created: function () {
         window.addEventListener('keyup', this.keyCallback);
 			},
