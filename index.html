@@ -1,0 +1,190 @@
+<html>
+	<head>
+		<script src='https://unpkg.com/vue/dist/vue.js'></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+		<div style ='width: 100%; height: 400px;'>
+		<!-- app -->
+		<div class='taka_hashi'>
+			<!-- paginate -->
+			<span class='paginate prev' v-if="hasPrev()" @click="prev()">
+				<a href="javascript: void(0);">&#x25C0</a>
+			</span>
+			<span class='paginate next' v-if="hasNext()" @click="next()">
+				<a href="javascript: void(0);">&#x25B6</a>
+			</span>
+			<!-- content -->
+			<div class='content' @click="clickCallback" @keyup.space="next()" @keyup.left="prev()">
+					<p v-if="pages[actived]['header'] != ''" class='header'>
+						{{ pages[actived]['header'] }}
+					</p>
+				  <p v-for="line in pages[actived]['content']">
+				    {{ line }}
+				  </p>
+					<p v-if="pages[actived]['footer'] != ''" class='footer'>
+						{{ pages[actived]['footer'] }}
+					</p>
+			</div>	
+			<span class='fs' @click="fullscreen()">
+				<a href="javascript: void(0);">全屏&#x2B1B</a>
+			</span>
+		</div>
+	</div>
+	</body>	
+	
+	<script>
+		var page_data = [
+					{content: ['TakaHashi JS'], header: '', footer: '高橋簡報術的庫'},
+					{content: ['下周要報告'], header: '', footer: ''},
+					{content: ['Powerpoint來不及做'], header: '', footer: ''},
+					{content: ['用高橋簡報術'], header: '', footer: ''},
+					{content: ['所謂的','高橋簡報術'], header: '', footer: '高橋メソッド'},
+					{content: ['特色'], header: '', footer: ''},
+					{content: ['字體要大'], header: '', footer: ''},
+					{content: ['字數要少'], header: '', footer: ''},
+					{content: ['黑体','極簡'], header: '', footer: ''},
+					{content: ['優點(1)'], header: '', footer: ''},
+					{content: ['容易看'], header: '', footer: ''},
+					{content: ['字大','眼睛舒服'], header: '', footer: ''},
+					{content: ['優點(2)'], header: '', footer: ''},
+					{content: ['發表簡單'], header: '', footer: ''},
+					{content: ['內容只有重點'], header: '', footer: ''},
+					{content: ['能幫助','講話的順序'], header: '', footer: ''},
+					{content: ['適合不擅長講話的人'], header: '', footer: ''},
+					{content: ['特別是 工程師'], header: 'エンジニア', footer: 'Engineer'},
+					{content: ['就算突然忘詞'], header: '', footer: ''},
+					{content: ['還是繼續翻頁'], header: '', footer: ''},
+					{content: ['看起來非常專業'], header: '', footer: ''},
+					{content: ['優點(3)'], header: '', footer: ''},
+					{content: ['聽眾注意力容易集中'], header: '', footer: ''},
+					{content: ['因為字少'], header: '', footer: ''},
+					{content: ['輕鬆看完一頁'], header: '', footer: ''},
+					{content: ['瞬間讀懂'], header: '', footer: ''},
+					{content: ['總結'], header: '', footer: ''},
+					{content: ['文字要巨大'], header: '', footer: ''},
+					{content: ['做人要友善'], header: '', footer: ''},
+					{content: ['謝謝觀看'], header: '', footer: ''},
+				];
+		var taka = new Vue({
+			el: '.taka_hashi',
+			data: {
+				actived: 0,
+				pages: page_data,
+			},
+			created: function () {
+        window.addEventListener('keyup', this.keyCallback);
+			},
+			methods: {
+				fullscreen: function(){
+					console.log('qq');
+					ele = this.$el;
+			    if (ele.requestFullscreen) {
+			        ele.requestFullscreen();
+			    }
+			    else if (ele.mozRequestFullScreen) {
+			        ele.mozRequestFullScreen();
+			    }
+			    else if (ele.webkitRequestFullscreen) {
+			        ele.webkitRequestFullscreen();
+			    }
+			    else if (ele.msRequestFullscreen) {
+			        ele.msRequestFullscreen();
+			    }
+				},
+				next: function(){
+					if(this.actived < (this.pages.length - 1) ){
+						this.actived ++;
+					}
+				},
+				prev: function(){
+					if(this.actived > 0 ){
+							this.actived --;
+					}
+				},
+				hasNext: function(){
+					return this.actived < (this.pages.length - 1) ? true : false
+				},
+				hasPrev: function(){
+					return this.actived > 0 ? true : false
+				},
+				keyCallback: function(e){
+					let triggerNext = ['Space','ArrowRight','ArrowDown'];
+					let triggerPrev = ['Backspace','ArrowLeft','ArrowUp'];
+					let press = e.code;
+					if(triggerNext.includes(press)){
+						this.next();
+					}else if(triggerPrev.includes(press)){
+						this.prev();
+					}else{
+						console.warn('unknown key input');
+					}
+				},
+				clickCallback: function(e){
+					let contentWidth = e.target.offsetWidth;
+					let fixedClickX = e.x - e.target.offsetLeft
+					if(fixedClickX > (contentWidth / 2) ) {
+						this.next();
+					}else{
+						this.prev();
+					}
+				},
+				// TODO
+				// fetchContent: function(source){
+				// 	type = typeof(source)
+				// 	switch(type){
+				// 		case 'string':
+
+				// 			break;
+				// 		case 'object':
+						
+				// 			break;
+
+				// 	}	
+				// }
+			}
+		});
+		
+	</script>
+	<style>
+		.taka_hashi {
+			background-color: white;
+			width: 100%;
+			height: 100%;
+			padding-top: 18%
+		}
+		.taka_hashi a {
+			color: black;
+		}
+		.taka_hashi .content {
+			text-align: center;
+			width: 100%;
+			height: 100%;
+		}
+		.taka_hashi .content p{
+			margin: 0;
+			font-size: 8vw;
+	    font-weight: bold;
+		}
+		.taka_hashi .content p::selection {
+		  background: white; 
+		}
+		
+		.taka_hashi .content p.header,.taka_hashi .content p.footer{
+			color: red;
+	    font-weight: bold;
+			font-size: 3vw;
+		}
+		.taka_hashi .paginate.next{
+			position: relative;
+			float: right;
+		}
+		.taka_hashi .paginate.prev{
+			position: relative;
+			float: left;
+		}
+		.taka_hashi .fs{
+			float: right;
+		}
+	</style>
+</html>
