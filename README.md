@@ -11,32 +11,32 @@
 
 </br>
 <b>1. 數據</b>
+```
+	var page_data = [
+		{content: [''], header: '', footer: ''},
+	];
+```
 
-	```javascript
-			var page_data = [
-				{content: [''], header: '', footer: ''},
-			];
-	```
+如果要新增投影片時，只要新增page_data陣列內的元素
 
-	如果要新增投影片時，只要新增page_data陣列內的元素
+例如想產生三張投影片，只要將代碼改為
 
-	例如想產生三張投影片，只要將代碼改為
+```javascript
+		var page_data = [
+			{content: [''], header: '', footer: ''},
+			{content: [''], header: '', footer: ''},
+			{content: [''], header: '', footer: ''},
+		];
+```
 
-	```javascript
-			var page_data = [
-				{content: [''], header: '', footer: ''},
-				{content: [''], header: '', footer: ''},
-				{content: [''], header: '', footer: ''},
-			];
-	```
+這個陣列每個元素都會是一張投影片
 
-	這個陣列每個元素都會是一張投影片
+content是一字串陣列，會產生投影片主要的大黑字，每個元素代表一行
 
-	content是一字串陣列，會產生投影片主要的大黑字，每個元素代表一行
+['1. 2. 3.']會產生一行'1. 2. 3.'，['1.','2.','3.']會分別產生三行
 
-	['1. 2. 3.']會產生一行'1. 2. 3.'，['1.','2.','3.']會分別產生三行
+header與footer內為字串，會在上方與下方產生紅字
 
-	header與footer內為字串，會在上方與下方產生紅字
 
 
 </br>
