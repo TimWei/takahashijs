@@ -41,14 +41,14 @@ header與footer內為字串，會在上方與下方產生紅字
 
 </br>
 <b>2. APP視圖</b>
-	```javascript
-			<div class='taka_hashi'>
-				<taka-arrow></taka-arrow>
-				<taka-content></taka-content>
-				<taka-fs></taka-fs>
-			</div>
-	```
-	可以在這邊直接拆卸或新增組件
+```javascript
+	<div class='taka_hashi'>
+		<taka-arrow></taka-arrow>
+		<taka-content></taka-content>
+		<taka-fs></taka-fs>
+	</div>
+```
+可以在這邊直接拆卸或新增組件
 
 
 </br>
