@@ -7,10 +7,10 @@
 ### 如何使用 ###
 依賴於VueJS
 
-目前的架構分為，數據、APP視圖
+可直接修改數據，增減投影片數量與修改內容
 
 </br>
-<b>1. 數據</b>
+<b>1. 新增投影片</b>
 ```
 	var page_data = [
 		{content: [''], header: '', footer: ''},
@@ -31,13 +31,15 @@
 
 這個陣列每個元素都會是一張投影片
 
-content是一字串陣列，會產生投影片主要的大黑字，每個元素代表一行
+content可以放入 
+* 字串
+* 圖片鏈接
 
-['1. 2. 3.']會產生一行'1. 2. 3.'，['1.','2.','3.']會分別產生三行
+['first_string second_string third_string']會產生一行'first_string second_string third_string'的投影片，['first_string','second_string','third_string']會產生分三行的投影片
 
 header與footer內為字串，會在上方與下方產生紅字
 
-
+不建議一張圖片放置超過四行的高度
 
 </br>
 <b>2. APP視圖</b>
