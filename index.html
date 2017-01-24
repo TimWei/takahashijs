@@ -7,8 +7,8 @@
 		<!-- app -->
 		<div class='taka_hashi'>
 			<taka-arrow></taka-arrow>
-			<taka-content></taka-content>
 			<taka-fs></taka-fs>
+			<taka-content></taka-content>
 		</div>
 	</body>	
 	<!-- components -->
@@ -25,9 +25,9 @@
 	</script>
 
 	<script type="text/x-template" id="taka_hashi_fs">
-		<span class='fs' @click='fullscreen'>
-			<a href='javascript: void(0);'>全屏&#x2B1B</a>
-		</span>
+		<div class='fs' @click='fullscreen'>
+			<a href='javascript: void(0);' v-if='fs'>全屏&#x2B1B</a>
+		</div>
 	</script>
 
 	<script type="text/x-template" id="taka_hashi_content">
@@ -35,9 +35,11 @@
 			<p v-if="pages[actived]['header']!=''" class='header'>
 				{{ pages[actived]['header'] }}
 			</p>
-			 <p v-for="line in pages[actived]['content']">
-			    {{ line }}
-			 </p>
+			<div class='line' v-for="line in pages[actived]['content']">
+			  <img v-bind:src='line' v-if="lineParser(line) == 'img'">
+			  <a target='_blank' v-bind:href='line' v-else-if="lineParser(line) == 'link'">{{ line }}</a>
+			  <p v-else-if="lineParser(line) == 'text'">{{ line }}</p>
+			</div>
 			<p v-if="pages[actived]['footer'] != ''" class='footer'>
 				{{ pages[actived]['footer'] }}
 			</p>
@@ -47,18 +49,30 @@
 	<script>
 		var page_data = [
 					{content: ['高橋流JS'], header: '', footer: ''},
+					{content: ['http://s.imgur.com/images/logo-1200-630.jpg?2','http://www.w3school.com.cn/js/js_switch.asp'], header: 'test', footer: ''},
+					{content: ['http://www.w3school.com.cn/js/js_switch.asp','http://www.w3school.com.cn/js/js_switch.asp'], header: '', footer: ''},
 				];
 
 		var taka_data = {
 			actived: 0,
 			pages: page_data,
+			fs: true
 		}
 
 		var fs_component = {
 			template: '#taka_hashi_fs',
+				created: function () {
+			    document.addEventListener('webkitfullscreenchange', this.fsCallback, false);
+			    document.addEventListener('mozfullscreenchange', this.fsCallback, false);
+			    document.addEventListener('fullscreenchange', this.fsCallback, false);
+			    document.addEventListener('MSFullscreenChange', this.fsCallback, false);
+				},
 		  	methods: {
+		  		fsCallback: function(){
+		  			this.fs = !this.fs;
+		  		},
 		  		fullscreen: function(){
-					ele = taka.$el;
+						ele = taka.$el;
 				    if (ele.requestFullscreen) {
 				        ele.requestFullscreen();
 				    }
@@ -72,8 +86,10 @@
 				        ele.msRequestFullscreen();
 				    }
 		  		}
+		  	},
+			 	data: function () {
+		    	return taka_data;
 		  	}
-
 		}
 
 		var content_component = {
@@ -91,6 +107,10 @@
 					}
 				},
 				clickCallback: function(e){
+					// console.log(e.target.tagName);
+					if(e.target.tagName != 'DIV'){
+						return 0;
+					}
 					let contentWidth = e.target.offsetWidth;
 					let fixedClickX = e.x - e.target.offsetLeft
 					if(fixedClickX > (contentWidth / 2) ) {
@@ -99,9 +119,17 @@
 						this.prev();
 					}
 				},
-
+				lineParser: function(data){
+					if(data.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/)){
+						return 'img'
+					}else if(data.match(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/)){
+						return 'link'
+					}else{
+						return 'text'
+					}
+				}
 		  	},
-		 	data: function () {
+			 	data: function () {
 		    	return taka_data;
 		  	}
 		}
@@ -161,19 +189,6 @@
 						console.warn('unknown key input');
 					}
 				},
-				// TODO
-				// fetchContent: function(source){
-				// 	type = typeof(source)
-				// 	switch(type){
-				// 		case 'string':
-
-				// 			break;
-				// 		case 'object':
-						
-				// 			break;
-
-				// 	}	
-				// }
 			}
 		});
 		
@@ -183,7 +198,6 @@
 			background-color: white;
 			width: 100%;
 			height: 100%;
-			padding-top: 25%;
 		}
 		.taka_hashi a {
 			color: black;
@@ -192,11 +206,24 @@
 			text-align: center;
 			width: 100%;
 			height: 100%;
+			padding-top: 15%;
+		}
+		.taka_hashi .content .line img{
+			height: 50%;
+		}
+		.taka_hashi .content .line a{
+			margin: 0 10% 0 10%;
+	    word-wrap: break-word;
+      font-style: oblique;
+			color: blue;
+	    font-weight: bold;
+			font-size: 2vw;
 		}
 		.taka_hashi .content p{
 			margin: 0;
 			font-size: 8vw;
 	    font-weight: bold;
+	    display: inline;
 		}
 		.taka_hashi .content p::selection {
 		  background: white; 
@@ -206,17 +233,26 @@
 			color: red;
 	    font-weight: bold;
 			font-size: 3vw;
+	    display: inline;
+		}
+		.taka_hashi .paginate a{
+			position: relative;
+			font-size: 2vw;
+	    text-decoration: none;
 		}
 		.taka_hashi .paginate.next{
-			position: relative;
 			float: right;
 		}
 		.taka_hashi .paginate.prev{
-			position: relative;
 			float: left;
 		}
 		.taka_hashi .fs{
 			float: right;
+			padding-right: 3%;
+		}
+		.taka_hashi .fs a{
+			font-size: 2vw;
+	    text-decoration: none;
 		}
 	</style>
 </html>
