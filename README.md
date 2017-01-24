@@ -35,7 +35,14 @@ content可以放入
 * 字串
 * 圖片鏈接
 
-['first_string second_string third_string']會產生一行'first_string second_string third_string'的投影片，['first_string','second_string','third_string']會產生分三行的投影片
+```javascript
+	['first_string second_string third_string']
+```
+會產生一行'first_string second_string third_string'的投影片，
+```javascript
+	['first_string','second_string','third_string']
+```
+會產生分三行的投影片
 
 header與footer內為字串，會在上方與下方產生紅字
 
