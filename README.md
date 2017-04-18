@@ -50,6 +50,7 @@ header與footer內為字串，會在上方與下方產生紅字
 
 </br>
 <b>2. APP視圖</b>
+
 ```javascript
 	<div class='taka_hashi'>
 		<taka-arrow></taka-arrow>
@@ -57,6 +58,7 @@ header與footer內為字串，會在上方與下方產生紅字
 		<taka-fs></taka-fs>
 	</div>
 ```
+
 可以自行定義組件後，於此拆裝
 
 </br>
